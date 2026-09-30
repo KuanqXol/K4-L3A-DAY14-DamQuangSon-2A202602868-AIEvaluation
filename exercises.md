@@ -30,11 +30,17 @@ critical.
 
 | Metric | Acceptable Low Score Scenario | Critical Low Score Scenario | Action Required |
 |---|---|---|---|
-| Faithfulness | | | |
-| Answer Relevance | | | |
-| Context Recall | | | |
-| Context Precision | | | |
-| Completeness | | | |
+| Faithfulness | Điểm overlap thấp do diễn đạt lại, nhưng human review xác nhận mọi claim có evidence. | Bịa điều kiện bảo hành, phí hoặc cam kết hoàn tiền ngoài corpus. | Đối chiếu từng claim với gold evidence và chunks thực tế; kiểm tra cả retrieval lẫn generation. |
+| Answer Relevance | Trợ lý hỏi làm rõ khi câu hỏi thiếu thông tin, nên ít trùng từ với câu hỏi. | Trả lời sai sản phẩm hoặc không giải quyết yêu cầu của khách. | Kiểm tra intent, lịch sử hội thoại và rubric; bổ sung case hỏi mơ hồ. |
+| Context Recall | Chunks diễn đạt khác expected answer nhưng vẫn đủ evidence sau khi kiểm tra thủ công. | Thiếu evidence về ngoại lệ hoặc điều kiện quyết định khách có được đổi trả. | Đối chiếu các ý cần trả lời với chunks; kiểm tra query, chunking và số chunks lấy về. |
+| Context Precision | Có vài chunks thừa nhưng evidence cần thiết vẫn đứng đầu và vừa giới hạn context. | Chunks nhiễu đứng đầu, đẩy evidence quan trọng ra khỏi context. | Kiểm tra thứ tự truy xuất, lọc nhiễu và thử reranking trên cùng tập chunks. |
+| Completeness | Trả lời ngắn đúng trọng tâm; phần thiếu trong reference là chi tiết ngoài yêu cầu. | Bỏ sót thời hạn, điều kiện hoặc bước bắt buộc để khách thực hiện yêu cầu. | Tách expected answer thành các ý bắt buộc; rà soát reference và bổ sung hướng dẫn trả lời đủ ý. |
+
+Điểm dưới 0.6 cần điều tra từng case; 0.6–0.8 cần phân tích lỗi và cải thiện.
+Chỉ chấp nhận điểm thấp khi có kiểm tra evidence xác nhận nguyên nhân, vì overlap
+có thể bỏ sót cách diễn đạt tương đương. Golden dataset chứa câu hỏi, đáp án tham
+chiếu và evidence biên soạn từ corpus; actual answer phải lấy từ lần chạy trợ lý,
+không sao chép expected answer để thay thế.
 
 ### Exercise 1.2 — Bias trong LLM-as-a-Judge
 
@@ -46,15 +52,28 @@ Ba bias thường gặp:
 
 **Câu 1: Thiết kế experiment phát hiện position bias với ít nhất hai conditions.**
 
-> *Câu trả lời:*
+> Dùng cùng tập câu hỏi và cặp đáp án A/B: condition 1 trình bày A trước B,
+> condition 2 trình bày B trước A. Giữ nguyên rubric, evidence và cấu hình judge;
+> ẩn nguồn model, xáo trộn thứ tự các case và lặp nhiều lần. Quy đổi kết quả về
+> danh tính A/B rồi đo tỷ lệ đảo lựa chọn và tỷ lệ chọn đáp án đứng trước, có
+> tính cả hòa. So sánh với nhãn người chấm và độ dao động giữa các lần chạy;
+> nếu lựa chọn thường chuyển theo vị trí thì có dấu hiệu position bias.
 
 **Câu 2: Làm thế nào giảm verbosity bias bằng rubric design?**
 
-> *Câu trả lời:*
+> Chấm theo các ý đúng, có evidence và đáp ứng yêu cầu; không cộng điểm vì độ
+> dài, lặp ý hay văn phong bóng bẩy. Nêu rõ câu ngắn đủ ý được điểm tối đa,
+> claim thừa không có evidence bị trừ ở faithfulness. Thử cặp đáp án ngắn/dài
+> có cùng thông tin đúng, chỉ thêm câu lặp ở bản dài, rồi kiểm tra chênh lệch điểm.
 
 **Câu 3: Tại sao cần calibrate LLM judge với human labels?**
 
-> *Câu trả lời:*
+> Human labels giúp kiểm tra judge có áp dụng đúng rubric và nhận ra lỗi quan
+> trọng trong domain hay không. Cho hai người chấm độc lập, thống nhất các case
+> bất đồng rồi so sánh với judge theo từng metric và độ khó; sửa rubric trên
+> tập calibration và kiểm chứng trên tập giữ riêng. Để thử self-preference,
+> dùng đáp án từ nhiều model, ẩn tên nguồn và cho các judge khác nhau chấm;
+> kiểm tra judge có ưu ái output của chính model đó so với nhãn người chấm không.
 
 ### Exercise 1.3 — Evaluation trong CI/CD
 
@@ -62,13 +81,27 @@ Ba bias thường gặp:
 
 | Metric | Threshold | Lý do |
 |---|---:|---|
-| Faithfulness | | |
-| Answer Relevance | | |
-| Completeness | | |
+| Faithfulness | ≥ 0.90 | Hạn chế claim sai về chính sách, phí và bảo hành. |
+| Answer Relevance | ≥ 0.80 | Đảm bảo trả lời đúng nhu cầu hỗ trợ. |
+| Completeness | ≥ 0.85 | Hạn chế bỏ sót điều kiện và bước thực hiện cần thiết. |
+
+Quality gate đề xuất: block deployment nếu trung bình bất kỳ metric nào trên
+tập offline cố định thấp hơn ngưỡng tương ứng, hoặc có case chính sách quan trọng
+được human review xác nhận bịa thông tin hay thiếu điều kiện bắt buộc. Kiểm tra
+riêng từng nhóm difficulty để tránh điểm trung bình che lỗi. Các ngưỡng này là
+đề xuất trong worksheet, cần hiệu chỉnh với human labels; không thay công thức
+Overall = (Faithfulness + Relevance + Completeness) / 3 hay pass rule của Lab
+(cả ba answer scores ≥ 0.5). Context Recall và Context Precision dùng chẩn đoán
+retrieval riêng; khi báo cáo, giữ `None` là chưa tính và `0.0` là đã tính được 0.
 
 **Câu 2: Khi nào dùng offline evaluation, online evaluation và human review?**
 
-> *Câu trả lời:*
+> Offline: trước mỗi thay đổi prompt, model hoặc retriever, chạy golden dataset
+> với actual answers mới và so với baseline để kiểm tra regression và quality gate.
+> Online: sau triển khai có kiểm soát, theo dõi tỷ lệ giải quyết yêu cầu, phản hồi
+> khách, lỗi và độ trễ để phát hiện thay đổi trong câu hỏi thực tế.
+> Human review: khi judge bất đồng, điểm thấp bất thường, xuất hiện câu hỏi mới
+> hoặc lỗi chính sách quan trọng; dùng kết quả để hiệu chỉnh rubric và bổ sung dataset.
 
 ---
 
