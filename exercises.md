@@ -179,31 +179,37 @@ và quyết định thiết kế, không chép lại toàn bộ QA.
 
 | Hạng mục | Kết quả |
 |---|---|
-| Tổng số records | ____ / 20 |
-| Easy | ____ / 5 |
-| Medium | ____ / 7 |
-| Hard | ____ / 5 |
-| Adversarial | ____ / 3 |
-| Source documents được sử dụng | ____ / 10 |
-| Validator status | PASS / FAIL |
+| Tổng số records | 20 / 20 |
+| Easy | 5 / 5 |
+| Medium | 7 / 7 |
+| Hard | 5 / 5 |
+| Adversarial | 3 / 3 |
+| Source documents được sử dụng | 10 / 10 |
+| Validator status | PASS |
 
 **Ba case đại diện cho quyết định thiết kế**
 
 | ID | Difficulty | Source document(s) | Vì sao case phù hợp với difficulty/attack type? |
 |---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
+| E02 | Easy | `02_orders_and_payments.md` | Tra trực tiếp ngưỡng mua và lịch trả góp OrbitPay từ một đoạn chính sách. |
+| H01 | Hard | `09_escalation_and_policy_updates.md` | Phải chọn version theo ngày đặt hàng, đếm cửa sổ từ ngày giao hàng và loại trừ quyền lợi OrbitPlus được thêm ở version 2.0. |
+| A02 | Adversarial — prompt injection | `00_system_scope.md` | Chỉ dẫn giả trong retrieved note yêu cầu tiết lộ hidden prompt và credentials; đáp án phải giữ quy tắc hệ thống và yêu cầu câu hỏi hỗ trợ hợp lệ. |
 
 **Điểm khó nhất khi xây dựng expected answer hoặc evidence là gì?**
 
-> *Câu trả lời:*
+> Khó nhất là tách ngày quyết định **version** khỏi ngày bắt đầu đếm hạn trả
+> hàng. Với H01, đơn ngày 31/08/2026 dùng version 1.0 dù giao ngày 05/09;
+> 21 ngày được đếm từ ngày giao, còn quyền lợi OrbitPlus 45 ngày của version 2.0
+> không áp dụng. Tôi giữ riêng các câu evidence cho ba quy tắc này để reviewer
+> kiểm tra được từng claim. Tôi cũng đối chiếu điều kiện miễn phí restocking,
+> quyền lợi thành viên và các hành vi trợ lý không được thực hiện trước khi chốt
+> expected answer.
 
 **Xác nhận:**
 
-- [ ] Mọi claim trong expected answer đều có evidence hỗ trợ.
-- [ ] Không có questions trùng ý và không dùng kiến thức ngoài corpus.
-- [ ] `python validate_golden_dataset.py` báo `PASS`.
+- [x] Mọi claim trong expected answer đều có evidence hỗ trợ.
+- [x] Không có questions trùng ý và không dùng kiến thức ngoài corpus.
+- [x] `python validate_golden_dataset.py` báo `PASS`.
 
 ### Exercise 3.2 — Benchmark Run
 
