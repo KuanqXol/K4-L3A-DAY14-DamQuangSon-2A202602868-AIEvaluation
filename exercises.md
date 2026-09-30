@@ -341,19 +341,44 @@ verbosity bias và self-preference bằng cách nào?
 Chỉ làm sau khi hoàn thành 3.1–3.3. Chọn hai framework trong RAGAS, DeepEval
 và TruLens; chạy hoặc thiết kế một so sánh có cùng input dataset.
 
-| Tiêu chí | Framework 1: ____ | Framework 2: ____ |
+| Tiêu chí | Framework 1: Ragas | Framework 2: DeepEval |
 |---|---|---|
-| Setup complexity | | |
-| Metrics available | | |
-| CI/CD integration | | |
-| Kết quả trên cùng dataset | | |
-| Insight rút ra | | |
+| Setup complexity | Thiết kế `EvaluationDataset` với `user_input`, `response`, `reference`, `retrieved_contexts`; cần cài thêm Ragas, cấu hình judge LLM và giữ version metric cố định. | Thiết kế `LLMTestCase` với `input`, `actual_output`, `expected_output`, `retrieval_context`; cần cài DeepEval, cấu hình cùng judge LLM và ngưỡng. |
+| Metrics available | Faithfulness, Response/Answer Relevancy, Context Recall, Context Precision; có thể dùng reference cho retrieval metrics. | Faithfulness, Answer Relevancy, Contextual Recall, Contextual Precision; metric có reason để kiểm tra từng case. |
+| CI/CD integration | Gọi `evaluate()` trong script CI, kiểm tra bảng điểm và tự đặt gate theo baseline/human review. | `assert_test()`/`deepeval test run` tích hợp Pytest và có thể fail CI khi metric dưới threshold. |
+| Kết quả trên cùng dataset | **Thiết kế, chưa chạy Ragas:** 20/20 records đã ghép vào `artifacts/framework_comparison_inputs.json`; chưa có Ragas score. | **Thiết kế, chưa chạy DeepEval:** cùng 20 records và cùng thứ tự chunks; chưa có DeepEval score. |
+| Insight rút ra | Có thể so claim grounding và coverage theo nghĩa, nhưng chưa thể kết luận Ragas strict hơn từ số liệu Lab. | Cho phép xem lý do từng verdict và dùng trực tiếp làm quality gate; chưa thể kết luận DeepEval strict hơn trước khi chạy. |
 
 - Scores có nhất quán không?
 - Framework nào strict hơn và vì sao?
 - Hai framework có tìm ra cùng failure cases không?
 
-> *Phân tích:*
+> Đây là **thiết kế so sánh** được worksheet cho phép, không phải kết quả đã
+> chạy hai package. Cả hai dùng đúng 20 QA từ `golden_dataset.json` và actual
+> answers/chunks trong `artifacts/actual_answers.json`; file
+> `artifacts/framework_comparison_inputs.json` đóng băng input theo ID và thứ
+> tự chunks. Với Ragas, ánh xạ `input → user_input`, `actual_output → response`,
+> `expected_output → reference`, `retrieval_context → retrieved_contexts`.
+> Với DeepEval, dùng trực tiếp các trường `input`, `actual_output`,
+> `expected_output`, `retrieval_context`. `gold_context` chỉ để human audit.
+> Không sinh câu trả lời mới; dùng cùng judge model, cấu hình, version và ít
+> nhất hai lần chấm để quan sát dao động. So sánh trung bình, tỷ lệ dưới cùng
+> threshold, danh sách IDs thấp nhất và verdict trên A01/A02/M01/H01/H02.
+>
+> Hiện **chưa có hai bộ scores**, nên chưa thể nói scores có nhất quán, bên
+> nào strict hơn, hay hai framework tìm cùng failures. Số đo duy nhất đã chạy
+> trên 20 QA là heuristic của Lab: pass 11/20; trung bình Faithfulness 0.592,
+> Relevance 0.665, Context Recall 0.820, Context Precision 0.944. Không gán
+> các số này cho Ragas hoặc DeepEval. Khi chạy thiết kế, framework có trung
+> bình thấp hơn trên cùng thang/cấu hình và phán quyết phù hợp human labels
+> mới có cơ sở gọi là strict hơn; so tập failed IDs và lý do để xem overlap.
+> Faithfulness của hai framework dùng **retrieved contexts**, còn Lab so
+> actual answer với **gold context**, nên số tuyệt đối không so trực tiếp.
+>
+> Tài liệu chính thức: [Ragas RAG evaluation](https://docs.ragas.io/en/latest/getstarted/rag_eval/),
+> [Ragas Context Recall](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_recall/),
+> [DeepEval RAG quickstart](https://deepeval.com/docs/getting-started-rag),
+> [DeepEval CI/CD](https://deepeval.com/docs/evaluation-unit-testing-in-ci-cd).
 
 ### Exercise 3.5 — Retrieval Reranking (Bonus +5)
 
@@ -366,22 +391,57 @@ thay đổi Context Recall hay không.
 4. Rerank cùng tập chunks, không thêm hoặc xóa chunk.
 5. Tính lại hai metrics và giải thích kết quả.
 
+Đã chạy trên **toàn bộ 20 traces** của `artifacts/actual_answers.json`, thay vì
+chọn chỉ các case có cải thiện. `rerank_by_overlap()` sắp ổn định theo số từ
+chung giữa `_tokenize(chunk)` và `_tokenize(question)`; **question** là input
+cho reranker, expected answer chỉ dùng để chấm sau rerank. Mỗi case giữ đúng
+năm chunk cũ và thứ tự chunk IDs trước/sau nằm trong
+`artifacts/bonus_reranking_results.json`. Tính lại Recall/Precision theo Task 2
+với cùng expected answer; không gọi model và không thay actual answers.
+
 | ID | Recall before | Recall after | Precision before | Precision after | Delta Precision |
 |---|---:|---:|---:|---:|---:|
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| **Avg** | | | | | |
+| E01 | 1.000 | 1.000 | 0.917 | 0.917 | +0.000 |
+| E02 | 1.000 | 1.000 | 0.806 | 0.917 | +0.111 |
+| E03 | 0.857 | 0.857 | 1.000 | 1.000 | +0.000 |
+| E04 | 1.000 | 1.000 | 1.000 | 1.000 | +0.000 |
+| E05 | 0.800 | 0.800 | 1.000 | 1.000 | +0.000 |
+| M01 | 0.958 | 0.958 | 1.000 | 1.000 | +0.000 |
+| M02 | 0.920 | 0.920 | 1.000 | 1.000 | +0.000 |
+| M03 | 0.950 | 0.950 | 1.000 | 1.000 | +0.000 |
+| M04 | 0.871 | 0.871 | 0.887 | 0.950 | +0.062 |
+| M05 | 0.889 | 0.889 | 1.000 | 1.000 | +0.000 |
+| M06 | 1.000 | 1.000 | 1.000 | 1.000 | +0.000 |
+| M07 | 1.000 | 1.000 | 1.000 | 1.000 | +0.000 |
+| H01 | 0.692 | 0.692 | 1.000 | 1.000 | +0.000 |
+| H02 | 0.520 | 0.520 | 0.887 | 0.950 | +0.062 |
+| H03 | 0.750 | 0.750 | 1.000 | 1.000 | +0.000 |
+| H04 | 0.533 | 0.533 | 0.887 | 0.887 | +0.000 |
+| H05 | 0.805 | 0.805 | 1.000 | 1.000 | +0.000 |
+| A01 | 0.579 | 0.579 | 0.804 | 0.950 | +0.146 |
+| A02 | 0.625 | 0.625 | 0.700 | 0.700 | +0.000 |
+| A03 | 0.652 | 0.652 | 1.000 | 1.000 | +0.000 |
+| **Avg** | 0.820 | 0.820 | 0.944 | 0.964 | +0.019 |
 
 **Tại sao Recall dự kiến không đổi?**
 
-> *Câu trả lời:*
+> Context Recall dùng hợp tập từ của năm chunks. Rerank chỉ hoán vị danh sách,
+> nên hợp không đổi; kiểm tra bằng `Counter` cho thấy multiset chunk giữ nguyên
+> và Recall bằng nhau ở cả 20 cases. Trung bình Recall vẫn là 0.820099.
+> Context Precision có xét hạng: E02 tăng 0.806→0.917, M04 0.887→0.950,
+> H02 0.887→0.950, A01 0.804→0.950; 16 case không đổi. Trung bình Precision
+> tăng 0.944444→0.963542 (+0.019097). Đây là thay đổi điểm retrieval trên
+> chunks đã lưu, không phải đo chất lượng actual answer sau khi sinh lại.
 
 **Khi nào reranking không đủ và cần sửa retriever/query/chunking?**
 
-> *Câu trả lời:*
+> Khi evidence cần thiết không nằm trong top-5, đổi thứ tự không thể thêm nó.
+> H02 có Recall 0.520 cả trước và sau vì trace thiếu đoạn return policy cần
+> để phân biệt return với warranty; dù Precision tăng 0.887→0.950, câu trả
+> lời cũ vẫn hứa outcome quá mức. Khi đó cần điều chỉnh query/chunking/top-k
+> hoặc retriever, rồi sinh answer mới và đánh giá lại. Rerank bằng overlap từ
+> question cũng có thể ưu tiên chunks lặp từ nhưng sai điều kiện; cần đọc
+> evidence và thử trên tập giữ riêng trước khi kết luận cải thiện semantic.
 
 ---
 
@@ -395,11 +455,11 @@ Hoàn thành `reflection.md` bằng kết quả thật từ Exercise 3.2.
 
 Hoàn thành kiểm tra cuối trong khoảng 16:50–17:00.
 
-- [ ] Tất cả required tests pass.
-- [ ] `golden_dataset.json` validate thành công.
-- [ ] Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
-- [ ] Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
-- [ ] Exercise 3.3 có rubric 1–5 và bias controls.
-- [ ] `reflection.md` có ba failure analyses và regression strategy.
-- [ ] Đã copy `template.py` thành `solution/solution.py`.
-- [ ] Exercise 3.4 và 3.5 chỉ làm nếu chọn bonus.
+- [x] Tất cả required tests pass.
+- [x] `golden_dataset.json` validate thành công.
+- [x] Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
+- [x] Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
+- [x] Exercise 3.3 có rubric 1–5 và bias controls.
+- [x] `reflection.md` có ba failure analyses và regression strategy.
+- [x] Đã copy `template.py` thành `solution/solution.py`.
+- [x] Exercise 3.4 (thiết kế so sánh) và 3.5 (đo 20 traces) đã hoàn thành.

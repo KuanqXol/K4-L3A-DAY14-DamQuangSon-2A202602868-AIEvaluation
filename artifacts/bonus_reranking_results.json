@@ -1,0 +1,457 @@
+{
+  "source_actual_generated_at": "2026-09-30T08:19:43.672276+00:00",
+  "reranker": "stable descending overlap between _tokenize(chunk) and _tokenize(question)",
+  "metric_expected_source": "golden_dataset.json expected_answer (evaluation only)",
+  "results": [
+    {
+      "id": "E01",
+      "chunk_ids_before": [
+        "OT-01-P01",
+        "OT-06-P01",
+        "OT-01-P03",
+        "OT-05-P01",
+        "OT-09-P04"
+      ],
+      "chunk_ids_after": [
+        "OT-01-P01",
+        "OT-06-P01",
+        "OT-01-P03",
+        "OT-05-P01",
+        "OT-09-P04"
+      ],
+      "context_recall_before": 1.0,
+      "context_recall_after": 1.0,
+      "context_precision_before": 0.9166666666666666,
+      "context_precision_after": 0.9166666666666666,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "E02",
+      "chunk_ids_before": [
+        "OT-02-P04",
+        "OT-06-P02",
+        "OT-03-P05",
+        "OT-07-P02",
+        "OT-02-P03"
+      ],
+      "chunk_ids_after": [
+        "OT-02-P04",
+        "OT-03-P05",
+        "OT-06-P02",
+        "OT-07-P02",
+        "OT-02-P03"
+      ],
+      "context_recall_before": 1.0,
+      "context_recall_after": 1.0,
+      "context_precision_before": 0.8055555555555555,
+      "context_precision_after": 0.9166666666666666,
+      "delta_precision": 0.11111111111111116
+    },
+    {
+      "id": "E03",
+      "chunk_ids_before": [
+        "OT-04-P01",
+        "OT-07-P03",
+        "OT-03-P01",
+        "OT-04-P03",
+        "OT-05-P01"
+      ],
+      "chunk_ids_after": [
+        "OT-04-P01",
+        "OT-03-P01",
+        "OT-07-P03",
+        "OT-04-P03",
+        "OT-05-P01"
+      ],
+      "context_recall_before": 0.8571428571428571,
+      "context_recall_after": 0.8571428571428571,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "E04",
+      "chunk_ids_before": [
+        "OT-06-P01",
+        "OT-01-P03",
+        "OT-06-P04",
+        "OT-06-P05",
+        "OT-06-P03"
+      ],
+      "chunk_ids_after": [
+        "OT-06-P01",
+        "OT-01-P03",
+        "OT-06-P04",
+        "OT-06-P05",
+        "OT-06-P03"
+      ],
+      "context_recall_before": 1.0,
+      "context_recall_after": 1.0,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "E05",
+      "chunk_ids_before": [
+        "OT-08-P04",
+        "OT-00-P01",
+        "OT-07-P02",
+        "OT-00-P04",
+        "OT-04-P05"
+      ],
+      "chunk_ids_after": [
+        "OT-08-P04",
+        "OT-00-P01",
+        "OT-07-P02",
+        "OT-00-P04",
+        "OT-04-P05"
+      ],
+      "context_recall_before": 0.8,
+      "context_recall_after": 0.8,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "M01",
+      "chunk_ids_before": [
+        "OT-05-P01",
+        "OT-09-P04",
+        "OT-05-P02",
+        "OT-05-P05",
+        "OT-01-P03"
+      ],
+      "chunk_ids_after": [
+        "OT-05-P01",
+        "OT-09-P04",
+        "OT-05-P05",
+        "OT-01-P03",
+        "OT-05-P02"
+      ],
+      "context_recall_before": 0.9583333333333334,
+      "context_recall_after": 0.9583333333333334,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "M02",
+      "chunk_ids_before": [
+        "OT-03-P05",
+        "OT-05-P01",
+        "OT-09-P04",
+        "OT-06-P05",
+        "OT-03-P04"
+      ],
+      "chunk_ids_after": [
+        "OT-03-P05",
+        "OT-09-P04",
+        "OT-05-P01",
+        "OT-03-P04",
+        "OT-06-P05"
+      ],
+      "context_recall_before": 0.92,
+      "context_recall_after": 0.92,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "M03",
+      "chunk_ids_before": [
+        "OT-03-P04",
+        "OT-05-P04",
+        "OT-02-P02",
+        "OT-05-P05",
+        "OT-03-P01"
+      ],
+      "chunk_ids_after": [
+        "OT-03-P04",
+        "OT-05-P04",
+        "OT-02-P02",
+        "OT-05-P05",
+        "OT-03-P01"
+      ],
+      "context_recall_before": 0.95,
+      "context_recall_after": 0.95,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "M04",
+      "chunk_ids_before": [
+        "OT-08-P02",
+        "OT-08-P03",
+        "OT-06-P05",
+        "OT-08-P05",
+        "OT-00-P04"
+      ],
+      "chunk_ids_after": [
+        "OT-08-P02",
+        "OT-08-P05",
+        "OT-08-P03",
+        "OT-06-P05",
+        "OT-00-P04"
+      ],
+      "context_recall_before": 0.8709677419354839,
+      "context_recall_after": 0.8709677419354839,
+      "context_precision_before": 0.8875,
+      "context_precision_after": 0.95,
+      "delta_precision": 0.0625
+    },
+    {
+      "id": "M05",
+      "chunk_ids_before": [
+        "OT-04-P04",
+        "OT-05-P03",
+        "OT-06-P05",
+        "OT-06-P02",
+        "OT-00-P04"
+      ],
+      "chunk_ids_after": [
+        "OT-04-P04",
+        "OT-05-P03",
+        "OT-06-P05",
+        "OT-06-P02",
+        "OT-00-P04"
+      ],
+      "context_recall_before": 0.8888888888888888,
+      "context_recall_after": 0.8888888888888888,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "M06",
+      "chunk_ids_before": [
+        "OT-07-P05",
+        "OT-03-P05",
+        "OT-03-P01",
+        "OT-03-P02",
+        "OT-01-P02"
+      ],
+      "chunk_ids_after": [
+        "OT-07-P05",
+        "OT-03-P05",
+        "OT-03-P01",
+        "OT-03-P02",
+        "OT-01-P02"
+      ],
+      "context_recall_before": 1.0,
+      "context_recall_after": 1.0,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "M07",
+      "chunk_ids_before": [
+        "OT-02-P02",
+        "OT-03-P03",
+        "OT-05-P05",
+        "OT-02-P04",
+        "OT-03-P04"
+      ],
+      "chunk_ids_after": [
+        "OT-03-P03",
+        "OT-02-P02",
+        "OT-05-P05",
+        "OT-03-P04",
+        "OT-02-P04"
+      ],
+      "context_recall_before": 1.0,
+      "context_recall_after": 1.0,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "H01",
+      "chunk_ids_before": [
+        "OT-09-P04",
+        "OT-05-P01",
+        "OT-03-P05",
+        "OT-02-P04",
+        "OT-03-P01"
+      ],
+      "chunk_ids_after": [
+        "OT-09-P04",
+        "OT-03-P05",
+        "OT-05-P01",
+        "OT-02-P04",
+        "OT-03-P01"
+      ],
+      "context_recall_before": 0.6923076923076923,
+      "context_recall_after": 0.6923076923076923,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "H02",
+      "chunk_ids_before": [
+        "OT-06-P02",
+        "OT-06-P01",
+        "OT-01-P02",
+        "OT-04-P04",
+        "OT-07-P02"
+      ],
+      "chunk_ids_after": [
+        "OT-06-P02",
+        "OT-04-P04",
+        "OT-06-P01",
+        "OT-01-P02",
+        "OT-07-P02"
+      ],
+      "context_recall_before": 0.52,
+      "context_recall_after": 0.52,
+      "context_precision_before": 0.8875,
+      "context_precision_after": 0.95,
+      "delta_precision": 0.0625
+    },
+    {
+      "id": "H03",
+      "chunk_ids_before": [
+        "OT-04-P02",
+        "OT-02-P05",
+        "OT-02-P01",
+        "OT-09-P04",
+        "OT-01-P02"
+      ],
+      "chunk_ids_after": [
+        "OT-04-P02",
+        "OT-02-P05",
+        "OT-09-P04",
+        "OT-02-P01",
+        "OT-01-P02"
+      ],
+      "context_recall_before": 0.75,
+      "context_recall_after": 0.75,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "H04",
+      "chunk_ids_before": [
+        "OT-00-P05",
+        "OT-07-P01",
+        "OT-01-P02",
+        "OT-06-P05",
+        "OT-09-P04"
+      ],
+      "chunk_ids_after": [
+        "OT-00-P05",
+        "OT-07-P01",
+        "OT-01-P02",
+        "OT-06-P05",
+        "OT-09-P04"
+      ],
+      "context_recall_before": 0.5333333333333333,
+      "context_recall_after": 0.5333333333333333,
+      "context_precision_before": 0.8875,
+      "context_precision_after": 0.8875,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "H05",
+      "chunk_ids_before": [
+        "OT-03-P02",
+        "OT-03-P01",
+        "OT-09-P04",
+        "OT-05-P01",
+        "OT-02-P05"
+      ],
+      "chunk_ids_after": [
+        "OT-03-P02",
+        "OT-09-P04",
+        "OT-05-P01",
+        "OT-03-P01",
+        "OT-02-P05"
+      ],
+      "context_recall_before": 0.8048780487804879,
+      "context_recall_after": 0.8048780487804879,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "A01",
+      "chunk_ids_before": [
+        "OT-00-P03",
+        "OT-05-P04",
+        "OT-07-P02",
+        "OT-06-P01",
+        "OT-02-P01"
+      ],
+      "chunk_ids_after": [
+        "OT-00-P03",
+        "OT-07-P02",
+        "OT-06-P01",
+        "OT-05-P04",
+        "OT-02-P01"
+      ],
+      "context_recall_before": 0.5789473684210527,
+      "context_recall_after": 0.5789473684210527,
+      "context_precision_before": 0.8041666666666667,
+      "context_precision_after": 0.95,
+      "delta_precision": 0.14583333333333326
+    },
+    {
+      "id": "A02",
+      "chunk_ids_before": [
+        "OT-00-P04",
+        "OT-05-P04",
+        "OT-09-P05",
+        "OT-07-P05",
+        "OT-08-P01"
+      ],
+      "chunk_ids_after": [
+        "OT-00-P04",
+        "OT-07-P05",
+        "OT-05-P04",
+        "OT-09-P05",
+        "OT-08-P01"
+      ],
+      "context_recall_before": 0.625,
+      "context_recall_after": 0.625,
+      "context_precision_before": 0.7,
+      "context_precision_after": 0.7,
+      "delta_precision": 0.0
+    },
+    {
+      "id": "A03",
+      "chunk_ids_before": [
+        "OT-00-P02",
+        "OT-06-P05",
+        "OT-06-P02",
+        "OT-05-P05",
+        "OT-03-P02"
+      ],
+      "chunk_ids_after": [
+        "OT-00-P02",
+        "OT-06-P02",
+        "OT-06-P05",
+        "OT-05-P05",
+        "OT-03-P02"
+      ],
+      "context_recall_before": 0.6521739130434783,
+      "context_recall_after": 0.6521739130434783,
+      "context_precision_before": 1.0,
+      "context_precision_after": 1.0,
+      "delta_precision": 0.0
+    }
+  ],
+  "summary": {
+    "count": 20,
+    "avg_recall_before": 0.8200986588593304,
+    "avg_recall_after": 0.8200986588593304,
+    "avg_precision_before": 0.9444444444444444,
+    "avg_precision_after": 0.9635416666666666,
+    "improved": 4,
+    "unchanged": 16,
+    "worsened": 0
+  }
+}
